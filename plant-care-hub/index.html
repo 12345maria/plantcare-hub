@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#152920" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#152920" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="LeafLog" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <title>LeafLog — Daily growth, soil health &amp; weather</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="install-banner" class="install-banner" hidden>
+    <p class="install-banner-text"><strong>Install LeafLog</strong> — open like an app from your home screen.</p>
+    <div class="install-banner-actions">
+      <button type="button" class="btn primary" id="btn-install">Install</button>
+      <button type="button" class="btn ghost" id="btn-install-dismiss" aria-label="Dismiss">Not now</button>
+    </div>
+    <p id="install-ios-hint" class="install-ios-hint" hidden>
+      On iPhone/iPad: tap <strong>Share</strong> → <strong>Add to Home Screen</strong>.
+    </p>
+  </div>
+
+  <header class="top">
+    <div class="wrap top-inner">
+      <a href="#" class="logo">LeafLog</a>
+      <nav class="nav" aria-label="Main">
+        <a href="#weather">Weather</a>
+        <a href="#journal">Growth log</a>
+        <a href="#photo-check">Photo check</a>
+        <a href="#fertilizer">Organic feed</a>
+        <a href="#planting">What to plant</a>
+        <a href="#vegetables">Vegetables</a>
+        <a href="#mix">Potting mix</a>
+      </nav>
+      <button type="button" class="nav-toggle" id="nav-toggle" aria-label="Menu">☰</button>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="wrap hero-inner">
+      <div>
+        <h1>Track growth daily. Learn from your leaves.</h1>
+        <p class="lead">
+          Log photos and notes, see live weather, get seasonal planting ideas, potting mix recipes, and
+          <strong>organic-only</strong> feeding ideas—including liquids you can make from kitchen scraps.
+          Photo tips are educational—always confirm with a soil test or local extension.
+        </p>
+        <a href="#journal" class="btn primary">Start growth log</a>
+      </div>
+      <div class="hero-card" aria-hidden="true">
+        <span class="hero-leaf">🌿</span>
+        <p>Today’s snapshot → tomorrow’s healthier plant.</p>
+      </div>
+    </div>
+  </section>
+
+  <main>
+    <section id="weather" class="section">
+      <div class="wrap">
+        <h2>Live weather</h2>
+        <p class="section-intro">Uses your location (or a fallback city) via Open-Meteo—no API key required.</p>
+        <div class="weather-bar">
+          <button type="button" class="btn ghost" id="btn-locate">Use my location</button>
+          <label class="city-field">
+            <span class="sr-only">City</span>
+            <input type="text" id="city-input" placeholder="Or city (e.g. London)" autocomplete="off" />
+          </label>
+          <button type="button" class="btn secondary" id="btn-city-weather">Load city</button>
+        </div>
+        <p class="hint" id="weather-status">Waiting for location or city…</p>
+        <div class="weather-grid" id="weather-grid" hidden>
+          <article class="tile">
+            <h3>Temperature</h3>
+            <p class="big" id="w-temp">—</p>
+          </article>
+          <article class="tile">
+            <h3>Humidity</h3>
+            <p class="big" id="w-hum">—</p>
+          </article>
+          <article class="tile">
+            <h3>Precipitation</h3>
+            <p class="big" id="w-rain">—</p>
+          </article>
+          <article class="tile">
+            <h3>Wind</h3>
+            <p class="big" id="w-wind">—</p>
+          </article>
+          <article class="tile wide">
+            <h3>Conditions</h3>
+            <p id="w-desc">—</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="planting" class="section alt">
+      <div class="wrap">
+        <h2>What to plant now</h2>
+        <p class="section-intro">Suggestions combine your local temperature with the calendar (Northern Hemisphere). Adjust for your hardiness zone.</p>
+        <div class="planting-cards" id="planting-cards"></div>
+      </div>
+    </section>
+
+    <section id="journal" class="section">
+      <div class="wrap">
+        <h2>Daily growth log</h2>
+        <p class="section-intro">Saved only in this browser (local storage). Add a photo and note each check-in.</p>
+        <form class="journal-form" id="journal-form">
+          <label>Date
+            <input type="date" name="date" id="entry-date" required />
+          </label>
+          <label>Plant name
+            <input type="text" name="plant" placeholder="e.g. Cherry tomato" required />
+          </label>
+          <label>Height / size note
+            <input type="text" name="size" placeholder="e.g. 12 cm, 3 true leaves" />
+          </label>
+          <label>Photo (optional)
+            <input type="file" name="photo" accept="image/*" />
+          </label>
+          <label class="full">Observations
+            <textarea name="notes" rows="3" placeholder="New leaves, spots, wilting, flowers…"></textarea>
+          </label>
+          <button type="submit" class="btn primary">Save entry</button>
+        </form>
+        <ul class="journal-list" id="journal-list"></ul>
+      </div>
+    </section>
+
+    <section id="photo-check" class="section alt">
+      <div class="wrap">
+        <h2>Photo check &amp; deficiency guide</h2>
+        <p class="section-intro">
+          Upload a clear leaf/plant photo. We run a simple color check in your browser and map results to
+          <strong>common</strong> issues—this is <strong>not</strong> a lab test. The table below lists
+          <strong>organic-only</strong> fixes and kitchen-waste liquids. Confirm with soil tests and local advice.
+        </p>
+        <div class="photo-check-grid">
+          <div>
+            <label class="upload-zone" id="upload-zone">
+              <input type="file" id="check-photo" accept="image/*" hidden />
+              <span>Drop an image or tap to upload</span>
+            </label>
+            <canvas id="check-canvas" hidden></canvas>
+          </div>
+          <div class="analysis" id="analysis-panel">
+            <p class="muted">Upload a photo to see hints.</p>
+          </div>
+        </div>
+        <div class="nutrient-table-wrap">
+          <h3>Common deficiencies → organic fixes &amp; kitchen liquids</h3>
+          <table class="data-table" id="deficiency-table">
+            <thead>
+              <tr><th>Signs</th><th>Likely lack</th><th>Organic &amp; kitchen options</th><th>When &amp; how much</th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="fertilizer" class="section">
+      <div class="wrap">
+        <h2>Organic feeding — timing &amp; amounts</h2>
+        <p class="section-intro">
+          All suggestions here assume <strong>organic-only</strong> gardening: compost, manures from trusted sources,
+          plant/animal meals approved for organic use, and home-made ferments from kitchen waste. Dilute homemade
+          liquids more than you think; stop if plants burn or smell sour.
+        </p>
+        <div class="fert-cards">
+          <article class="fert-card">
+            <h3>Active growth</h3>
+            <p>
+              Top-dress <strong>compost</strong> or <strong>worm castings</strong> lightly every few weeks, or water with
+              <strong>diluted compost tea</strong> (see below) every <strong>7–14 days</strong>. For pots, use about
+              <strong>1–2 cm</strong> compost surface refresh or tea diluted until it looks like weak tea.
+            </p>
+          </article>
+          <article class="fert-card">
+            <h3>Flowers &amp; fruit</h3>
+            <p>
+              Favor <strong>potassium</strong> from <strong>banana peel tea</strong>, <strong>wood ash</strong> (tiny pinch, pH-aware),
+              or <strong>kelp meal</strong> tea. Ease off heavy <strong>nitrogen</strong> (fresh manure, strong nettle tea) so plants don’t stay all leaves.
+            </p>
+          </article>
+          <article class="fert-card">
+            <h3>Seedlings</h3>
+            <p>
+              Wait for <strong>2–4 true leaves</strong>. Use only <strong>very weak</strong> compost tea or rice-water ferment
+              at <strong>¼ strength</strong>—roughly one part liquid to three parts water if color is dark.
+            </p>
+          </article>
+        </div>
+
+        <h3 class="kitchen-title">Liquid fertilizers from kitchen waste</h3>
+        <p class="section-intro">Cover jars loosely; use non-chlorinated water if possible. Strain before watering soil (not leaves if sticky).</p>
+        <div class="kitchen-grid">
+          <article class="kitchen-card">
+            <h4>Compost tea</h4>
+            <p>Steep a double handful of <strong>finished compost</strong> in 4–5 L water <strong>24–48 hours</strong>, stir occasionally. Strain; dilute until pale amber; use within a day.</p>
+          </article>
+          <article class="kitchen-card">
+            <h4>Banana peel tea (K)</h4>
+            <p>Soak chopped peels in water <strong>3–7 days</strong> out of direct sun. Dilute <strong>1:5</strong> with water; good during flowering/fruiting.</p>
+          </article>
+          <article class="kitchen-card">
+            <h4>Eggshell extract (Ca)</h4>
+            <p>Wash, dry, crush shells; steep in water <strong>24+ hours</strong> or add vinegar dropwise until they fizz (then dilute heavily). Use sparingly; not a fast fix.</p>
+          </article>
+          <article class="kitchen-card">
+            <h4>Coffee grounds brew (mild N, acidic)</h4>
+            <p>Use <strong>cooled</strong> plain coffee or steep spent grounds in water overnight. Dilute <strong>at least 1:3</strong>; acid-lovers only; skip if soil is already acidic.</p>
+          </article>
+          <article class="kitchen-card">
+            <h4>Vegetable cooking water</h4>
+            <p>Water from boiling <strong>unsalted</strong> veg (potato, carrot, greens); cool completely. Mild trace feed—don’t use if salted or oily.</p>
+          </article>
+          <article class="kitchen-card">
+            <h4>Weed / nettle tea (N-rich)</h4>
+            <p>Submerge young nettle or comfrey greens in water <strong>2–3 weeks</strong> (smelly = normal). Dilute <strong>1:10</strong> before use; powerful—rotate with plain water.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="vegetables" class="section">
+      <div class="wrap">
+        <h2>Vegetable crop guide</h2>
+        <p class="section-intro">
+          Tap a crop for a full organic flow: when to sow, germination, potting mix, seedlings, growth, kitchen-safe
+          liquid feeds, flowering or fruiting, and harvest. Timings are typical for the <strong>Northern Hemisphere</strong>—adjust for your zone.
+        </p>
+        <div class="veg-grid" id="vegetable-grid"></div>
+      </div>
+    </section>
+
+    <section id="mix" class="section alt">
+      <div class="wrap">
+        <h2>Potting mix lab</h2>
+        <p class="section-intro">Recipes by use case. Percentages are by volume.</p>
+        <div class="mix-layout">
+          <div class="mix-picker">
+            <label>Mix type
+              <select id="mix-type">
+                <option value="general">General containers / veggies</option>
+                <option value="seed">Seed starting (fine, moisture-retentive)</option>
+                <option value="succulent">Succulents &amp; cactus</option>
+                <option value="acid">Acid-loving (e.g. blueberries)</option>
+              </select>
+            </label>
+            <div class="mix-output" id="mix-output"></div>
+          </div>
+          <div class="mix-seed-note">
+            <h3>From seed → strong transplant</h3>
+            <ol>
+              <li>Use <strong>seed mix</strong>: light, sterile, holds moisture without sogginess.</li>
+              <li>Moisten mix before filling trays; sow at depth on packet.</li>
+              <li>After true leaves appear, pot up or thin; introduce <strong>very dilute</strong> organic compost tea only if needed.</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="veg-modal" class="veg-modal" hidden aria-modal="true" role="dialog" aria-labelledby="veg-modal-title">
+    <div class="veg-modal-backdrop" id="veg-modal-backdrop" aria-hidden="true"></div>
+    <div class="veg-modal-panel" role="document">
+      <button type="button" class="veg-modal-close" id="veg-modal-close" aria-label="Close">×</button>
+      <div class="veg-modal-head">
+        <img id="veg-modal-img" src="" alt="" width="640" height="400" loading="lazy" />
+        <h2 id="veg-modal-title"></h2>
+      </div>
+      <div class="veg-modal-flow" id="veg-modal-flow"></div>
+    </div>
+  </div>
+
+  <footer class="foot">
+    <div class="wrap">
+      <p><strong>Disclaimer:</strong> LeafLog does not replace professional diagnosis. Photo analysis is a rough browser demo; pests, disease, and deficiencies need proper ID and often soil testing.</p>
+      <p class="muted">Weather data: Open-Meteo · Geocoding: Open-Meteo</p>
+      <p class="muted">Install: use <strong>Install</strong> prompt (Android/Chrome) or Share → Add to Home Screen (Safari). Requires HTTPS or localhost—not file://.</p>
+    </div>
+  </footer>
+
+  <script src="vegetables-data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
